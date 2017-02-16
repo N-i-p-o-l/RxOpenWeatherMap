@@ -2,16 +2,15 @@ package ru.art.getyourweather.data.remote;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.lang.reflect.Modifier;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import io.reactivex.Observable;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import ru.art.getyourweather.core.aggregation.CityAggregation;
-import rx.Observable;
 
 public interface WeatherService {
 
@@ -39,7 +38,7 @@ public interface WeatherService {
           .baseUrl(ENDPOINT)
           .client(lClient)
           .addConverterFactory(GsonConverterFactory.create(lGson))
-          .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+          .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
           .build();
 
       return lRetrofit.create(WeatherService.class);

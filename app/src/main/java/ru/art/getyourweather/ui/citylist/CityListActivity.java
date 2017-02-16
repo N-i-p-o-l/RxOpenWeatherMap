@@ -45,8 +45,10 @@ public class CityListActivity extends BaseActivity implements CityListContract.V
 
   @Override
   protected void onSaveInstanceState(Bundle outState) {
-    outState.putSerializable(CityAggregation.KEY, mPresenter.onSaveInstanceState());
     super.onSaveInstanceState(outState);
+    if (mPresenter.onSaveInstanceState() != null) {
+      outState.putSerializable(CityAggregation.KEY, mPresenter.onSaveInstanceState());
+    }
   }
 
   private void initialize(Bundle bundle) {

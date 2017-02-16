@@ -1,14 +1,13 @@
 package ru.art.getyourweather.data.repository.impl;
 
 import android.content.Context;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import ru.art.getyourweather.core.aggregation.CityAggregation;
 import ru.art.getyourweather.data.local.DatabaseAccess;
 import ru.art.getyourweather.data.remote.WeatherService;
 import ru.art.getyourweather.data.repository.CityRepository;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 public class CityRepositoryImpl implements CityRepository {
 

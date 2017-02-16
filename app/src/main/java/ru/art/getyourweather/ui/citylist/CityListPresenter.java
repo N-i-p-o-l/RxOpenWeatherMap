@@ -1,10 +1,10 @@
 package ru.art.getyourweather.ui.citylist;
 
 import android.util.Log;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 import ru.art.getyourweather.core.aggregation.CityAggregation;
 import ru.art.getyourweather.data.repository.CityRepository;
-import ru.art.getyourweather.data.repository.impl.CityRepositoryImpl;
-import rx.Subscriber;
 
 public class CityListPresenter implements CityListContract.Presenter {
 
@@ -29,9 +29,13 @@ public class CityListPresenter implements CityListContract.Presenter {
 
   @Override public void loadGuides() {
     mView.showLoadingLayout();
-    mRepository.synchronize().subscribe(new Subscriber<CityAggregation>() {
-      @Override public void onCompleted() {
+    mRepository.synchronize().subscribe(new Observer<CityAggregation>() {
+      @Override public void onSubscribe(Disposable d) {
+      }
 
+      @Override public void onNext(CityAggregation cityAggregation) {
+        CityListPresenter.this.mAggregation = cityAggregation;
+        refreshUi();
       }
 
       @Override public void onError(Throwable e) {
@@ -39,18 +43,20 @@ public class CityListPresenter implements CityListContract.Presenter {
         Log.d(TAG, e.toString());
       }
 
-      @Override public void onNext(CityAggregation cityAggregation) {
-        CityListPresenter.this.mAggregation = cityAggregation;
-        refreshUi();
+      @Override public void onComplete() {
       }
     });
   }
 
   @Override public void loadCacheGuides() {
     mView.showLoadingLayout();
-    mRepository.getCitiesAggregation().subscribe(new Subscriber<CityAggregation>() {
-      @Override public void onCompleted() {
+    mRepository.getCitiesAggregation().subscribe(new Observer<CityAggregation>() {
+      @Override public void onSubscribe(Disposable d) {
+      }
 
+      @Override public void onNext(CityAggregation cityAggregation) {
+        CityListPresenter.this.mAggregation = cityAggregation;
+        refreshUi();
       }
 
       @Override public void onError(Throwable e) {
@@ -58,19 +64,19 @@ public class CityListPresenter implements CityListContract.Presenter {
         Log.d(TAG, e.toString());
       }
 
-      @Override public void onNext(CityAggregation cityAggregation) {
-        CityListPresenter.this.mAggregation = cityAggregation;
-        refreshUi();
+      @Override public void onComplete() {
       }
     });
   }
 
   @Override public void refreshUi() {
-    if (mAggregation != null && mAggregation.cities.isEmpty()) {
-      mView.showEmptyLayout();
-    } else {
-      mView.showSuccessLayout();
-      mView.setupCityList(mAggregation.cities);
+    if (mAggregation != null) {
+      if (mAggregation.cities.isEmpty()) {
+        mView.showEmptyLayout();
+      } else {
+          mView.showSuccessLayout();
+          mView.setupCityList(mAggregation.cities);
+      }
     }
   }
 

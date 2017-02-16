@@ -6,6 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.List;
 import ru.art.getyourweather.core.aggregation.CityAggregation;
@@ -14,11 +19,6 @@ import ru.art.getyourweather.core.entity.Coord;
 import ru.art.getyourweather.core.entity.Main;
 import ru.art.getyourweather.core.entity.Weather;
 import ru.art.getyourweather.core.entity.Wind;
-import rx.Observable;
-import rx.Scheduler;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by nipol on 14.07.2016.
@@ -90,16 +90,14 @@ public class DatabaseAccess extends SQLiteOpenHelper {
   }
 
   public Observable<CityAggregation> syncDatabase(CityAggregation cityAggregation) {
-
-    Observable.OnSubscribe<CityAggregation> onSubscribe = subscriber -> {
-      setCityAggregation(cityAggregation);
-      subscriber.onNext(cityAggregation);
-      subscriber.onCompleted();
-    };
-
-    return Observable.create(onSubscribe)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread());
+    return Observable.create(new ObservableOnSubscribe<CityAggregation>() {
+      @Override public void subscribe(ObservableEmitter<CityAggregation> subscriber) throws Exception {
+        setCityAggregation(cityAggregation);
+        subscriber.onNext(cityAggregation);
+        subscriber.onComplete();
+      }
+    }).subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread());
   }
 
   public void setCityAggregation(CityAggregation cityAggregation) {
@@ -172,15 +170,14 @@ public class DatabaseAccess extends SQLiteOpenHelper {
       } while (cursor.moveToNext());
     }
 
-    Observable.OnSubscribe<CityAggregation> onSubscribe = (subscriber -> {
-      CityAggregation cityAggregation = new CityAggregation(cityList);
-      subscriber.onNext(cityAggregation);
-      subscriber.onCompleted();
-    });
-
-    return Observable.create(onSubscribe)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread());
+    return Observable.create(new ObservableOnSubscribe<CityAggregation>() {
+      @Override public void subscribe(ObservableEmitter<CityAggregation> subscriber) throws Exception {
+        CityAggregation cityAggregation = new CityAggregation(cityList);
+        subscriber.onNext(cityAggregation);
+        subscriber.onComplete();
+      }
+    }).subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread());
   }
 
 }
