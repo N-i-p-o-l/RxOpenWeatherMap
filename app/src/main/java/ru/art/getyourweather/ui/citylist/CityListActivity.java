@@ -7,10 +7,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import java.util.List;
+import ru.art.getyourweather.App;
 import ru.art.getyourweather.R;
 import ru.art.getyourweather.core.aggregation.CityAggregation;
 import ru.art.getyourweather.core.entity.City;
-import ru.art.getyourweather.data.remote.WeatherService;
 import ru.art.getyourweather.data.repository.CityRepository;
 import ru.art.getyourweather.data.repository.impl.CityRepositoryImpl;
 import ru.art.getyourweather.ui.base.BaseActivity;
@@ -47,7 +47,7 @@ public class CityListActivity extends BaseActivity implements CityListContract.V
   protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     if (mPresenter.onSaveInstanceState() != null) {
-      outState.putSerializable(CityAggregation.KEY, mPresenter.onSaveInstanceState());
+      //outState.putSerializable(CityAggregation.KEY, mPresenter.onSaveInstanceState());
     }
   }
 
@@ -61,7 +61,7 @@ public class CityListActivity extends BaseActivity implements CityListContract.V
   }
 
   private void dependencyInjection() {
-    CityRepository lRepository = new CityRepositoryImpl(getApplicationContext());
+    CityRepository lRepository = new CityRepositoryImpl((App) getApplication());
     mPresenter = new CityListPresenter(this, lRepository);
   }
 

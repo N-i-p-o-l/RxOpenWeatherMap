@@ -1,7 +1,6 @@
 package ru.art.getyourweather.ui.citylist;
 
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +8,9 @@ import android.widget.TextView;
 import java.util.List;
 import ru.art.getyourweather.R;
 import ru.art.getyourweather.core.entity.City;
+import ru.art.getyourweather.core.entity.Coord;
+import ru.art.getyourweather.core.entity.Main;
+import ru.art.getyourweather.core.entity.Weather;
 
 public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.ViewHolder> {
 
@@ -24,12 +26,15 @@ public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.ViewHo
   }
 
   @Override public void onBindViewHolder(ViewHolder holder, int position) {
-    City lCity = mCities.get(position);
-    if (lCity != null) {
-      holder.cityName.setText(lCity.getName());
-      holder.cityCoord.setText(lCity.getCoord().lat + " " + lCity.getCoord().lon);
-      holder.cityWeather.setText(lCity.getWeather()[0].description);
-      holder.cityTemp.setText(String.valueOf(lCity.getMain().temp));
+    City city = mCities.get(position);
+    if (city != null) {
+      Coord coord = city.getCoord();
+      Main main = city.getMain();
+      List<Weather> weathers = city.getWeathers();
+      holder.cityName.setText(city.getName());
+      holder.cityCoord.setText(coord.getLat() + " " + coord.getLon());
+      holder.cityWeather.setText(weathers.get(0).getDescription());
+      holder.cityTemp.setText(String.valueOf(main.getTemp()));
     }
   }
 
@@ -51,5 +56,4 @@ public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.ViewHo
     }
 
   }
-
 }

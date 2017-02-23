@@ -25,7 +25,9 @@ public interface WeatherService {
     private static final int CONNECT_TIMEOUT = 15;
 
     public static WeatherService build() {
-      Gson lGson = new GsonBuilder().create();
+      Gson lGson = new GsonBuilder()
+          .excludeFieldsWithoutExposeAnnotation()
+          .create();
       HttpLoggingInterceptor lInterceptor = new HttpLoggingInterceptor();
 
       OkHttpClient lClient = new OkHttpClient.Builder()

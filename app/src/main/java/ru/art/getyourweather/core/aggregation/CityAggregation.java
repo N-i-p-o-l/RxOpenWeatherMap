@@ -2,13 +2,15 @@ package ru.art.getyourweather.core.aggregation;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import io.reactivex.Observable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import ru.art.getyourweather.core.entity.City;
 
-public class CityAggregation implements Serializable {
+public class CityAggregation {
 
   public static final String KEY = "CityAggregation";
 
@@ -17,5 +19,6 @@ public class CityAggregation implements Serializable {
   }
 
   @SerializedName("list")
+  @Expose
   public List<City> cities;
 }
